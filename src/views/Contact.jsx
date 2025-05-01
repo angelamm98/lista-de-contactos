@@ -1,32 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaTrash, FaPen } from "react-icons/fa";
+import { Context } from "../store/context";
 
 const Contact = () => {
-  const contacts = [
-    {
-      id: 1,
-      name: "Morty Smith",
-      phone: "321-654-9870",
-      email: "morty@citadel.com",
-      address: "Calle Rick 123",
-      avatar: "https://ui-avatars.com/api/?name=Morty+Smith&background=random&size=100"
-    },
-    {
-      id: 2,
-      name: "Summer Smith",
-      phone: "321-654-1234",
-      email: "summer@citadel.com",
-      address: "Calle Rick 456",
-      avatar: "https://ui-avatars.com/api/?name=Summer+Smith&background=random&size=100"
-    }
-  ];
+  const { store } = useContext(Context);
+  const contacts = store.characters;
 
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-4" style={{ maxWidth: "800px", margin: "0 auto" }}>
         <h2>Contactos</h2>
-        <Link to="/add-contact"  class="btn btn-outline-info">Agregar Contacto</Link>
+        <Link to="/add-contact" className="btn btn-outline-info">Agregar Contacto</Link>
       </div>
 
       {contacts.map((contact) => (
@@ -37,7 +22,7 @@ const Contact = () => {
         >
           <div className="d-flex align-items-center">
             <img
-              src={contact.avatar}
+              src={contact.image}
               alt={contact.name}
               className="rounded-circle"
               width="80"
@@ -48,15 +33,15 @@ const Contact = () => {
               <h5 className="mb-1">{contact.name}</h5>
               <p className="mb-1 text-dark">
                 <FaMapMarkerAlt className="me-2 fa-icon" />
-                {contact.address}
+                {contact.location?.name}
               </p>
               <p className="mb-1 text-dark">
                 <FaPhone className="me-2 fa-icon" />
-                {contact.phone}
+                {contact.status}
               </p>
               <p className="mb-0 text-dark">
                 <FaEnvelope className="me-2 fa-icon" />
-                {contact.email}
+                {contact.species}
               </p>
             </div>
             <div className="d-flex flex-column justify-content-center gap-2">

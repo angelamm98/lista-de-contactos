@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../store/context"
 
 const AddContact = () => {
+  const state = useContext(Context)
   const { id } = useParams(); 
   const navigate = useNavigate();
 
@@ -41,7 +44,7 @@ const AddContact = () => {
             type="text"
             className="form-control"
             name="name"
-            value={contact.name}
+            value= {state.store.id}
             onChange={handleChange}
             required
           />
