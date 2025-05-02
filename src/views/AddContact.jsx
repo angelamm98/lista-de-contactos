@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { Context } from "../store/context"
+import { Context } from "../store/context";
 
 const AddContact = () => {
-  const state = useContext(Context)
-  const { id } = useParams(); 
+  const { store, actions } = useContext(Context);
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [contact, setContact] = useState({
@@ -17,7 +16,19 @@ const AddContact = () => {
 
   useEffect(() => {
     if (id) {
-      console.log("Editar contacto ID:", id);
+      const fetchContact = async () => {
+        const data = await actions.getContactById(id);
+        if (data) {
+          setContact({
+            id: data.id,
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            address: data.address
+          });
+        }
+      };
+      fetchContact();
     }
   }, [id]);
 
@@ -28,10 +39,14 @@ const AddContact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Contacto guardado:", contact);
-    navigate("/"); 
+    if (id) {
+      await actions.updateContact(contact);
+    } else {
+      await actions.addContact(contact);
+    }
+    navigate("/");
   };
 
   return (
@@ -44,7 +59,7 @@ const AddContact = () => {
             type="text"
             className="form-control"
             name="name"
-            value= {state.store.id}
+            value={contact.name}
             onChange={handleChange}
             required
           />
@@ -85,7 +100,7 @@ const AddContact = () => {
           />
         </div>
 
-        <button type="submit"  class="btn btn-outline-info">
+        <button type="submit" className="btn btn-outline-info">
           {id ? "Actualizar" : "Guardar"}
         </button>
       </form>

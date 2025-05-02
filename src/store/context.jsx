@@ -17,13 +17,14 @@ const injectContext = PassedComponent => {
             })
         );
 
+
         useEffect(() => {
-            state.actions.getCharacters();
+            state.actions.getContacts(); 
         }, []);
 
         return (
-            <Context.Provider value={state}>  
-               <PassedComponent {...props} />
+            <Context.Provider value={state}>
+                <PassedComponent {...props} />
             </Context.Provider>
         );
     };

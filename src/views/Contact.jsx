@@ -1,11 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaTrash, FaPen } from "react-icons/fa";
 import { Context } from "../store/context";
 
 const Contact = () => {
-  const { store } = useContext(Context);
-  const contacts = store.characters;
+  const { store, actions } = useContext(Context);
+
+  // Validamos que sea un array
+  const contacts = Array.isArray(store.contacts) ? store.contacts : [];
+
+  useEffect(() => {
+    actions.getContacts();
+  }, []);
 
   return (
     <div className="container mt-5">
@@ -13,6 +19,10 @@ const Contact = () => {
         <h2>Contactos</h2>
         <Link to="/add-contact" className="btn btn-outline-info">Agregar Contacto</Link>
       </div>
+
+      {contacts.length === 0 && (
+        <p className="text-center text-muted">No hay contactos aún.</p>
+      )}
 
       {contacts.map((contact) => (
         <div
@@ -22,7 +32,7 @@ const Contact = () => {
         >
           <div className="d-flex align-items-center">
             <img
-              src={contact.image}
+              src={"https://via.placeholder.com/80"}
               alt={contact.name}
               className="rounded-circle"
               width="80"
@@ -33,22 +43,22 @@ const Contact = () => {
               <h5 className="mb-1">{contact.name}</h5>
               <p className="mb-1 text-dark">
                 <FaMapMarkerAlt className="me-2 fa-icon" />
-                {contact.location?.name}
+                {contact.address}
               </p>
               <p className="mb-1 text-dark">
                 <FaPhone className="me-2 fa-icon" />
-                {contact.status}
+                {contact.phone}
               </p>
               <p className="mb-0 text-dark">
                 <FaEnvelope className="me-2 fa-icon" />
-                {contact.species}
+                {contact.email}
               </p>
             </div>
             <div className="d-flex flex-column justify-content-center gap-2">
               <Link to={`/add-contact/${contact.id}`} className="btn btn-outline-dark btn-sm">
                 <FaPen />
               </Link>
-              <button className="btn btn-outline-danger btn-sm">
+              <button className="btn btn-outline-danger btn-sm" onClick={() => actions.deleteContact(contact.id)}>
                 <FaTrash />
               </button>
             </div>
