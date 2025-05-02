@@ -6,7 +6,7 @@ import { Context } from "../store/context";
 const Contact = () => {
   const { store, actions } = useContext(Context);
 
-  // Validamos que sea un array
+  // Asegurarse de que contacts sea un array
   const contacts = Array.isArray(store.contacts) ? store.contacts : [];
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Contact = () => {
         >
           <div className="d-flex align-items-center">
             <img
-              src={"https://via.placeholder.com/80"}
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=random`}
               alt={contact.name}
               className="rounded-circle"
               width="80"

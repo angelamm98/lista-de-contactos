@@ -12,8 +12,7 @@ export const getState = ({ getStore, getActions, setStore }) => {
                 try {
                     const response = await fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts`);
                     const data = await response.json();
-                    console.log("💡 API data desde getContacts:", data); // Puedes quitar esto luego
-                    setStore({ contacts: data.contacts }); // ✅ Aquí está la corrección clave
+                    setStore({ contacts: data.contacts });
                 } catch (error) {
                     console.error("Error al obtener contactos:", error);
                 }
@@ -43,12 +42,13 @@ export const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            // Obtener un contacto por ID
+            // Obtener contacto por ID (filtrando)
             getContactById: async (id) => {
                 try {
-                    const response = await fetch(`${BASE_URL}/contacts/${id}`);
+                    const response = await fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts`);
                     const data = await response.json();
-                    return data;
+                    const contact = data.contacts.find(c => c.id == id);
+                    return contact || null;
                 } catch (error) {
                     console.error("Error al obtener contacto:", error);
                     return null;
@@ -64,7 +64,7 @@ export const getState = ({ getStore, getActions, setStore }) => {
                         address: contact.address,
                         phone: contact.phone
                     };
-                    const response = await fetch(`${BASE_URL}/contacts/${contact.id}`, {
+                    const response = await fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts/${contact.id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(updatedContact)
@@ -82,7 +82,7 @@ export const getState = ({ getStore, getActions, setStore }) => {
             // Eliminar un contacto
             deleteContact: async (id) => {
                 try {
-                    const response = await fetch(`${BASE_URL}/contacts/${id}`, {
+                    const response = await fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts/${id}`, {
                         method: "DELETE"
                     });
                     if (response.ok) {

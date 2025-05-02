@@ -3,9 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/context";
 
 const AddContact = () => {
-  const { store, actions } = useContext(Context);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { actions } = useContext(Context);
 
   const [contact, setContact] = useState({
     name: "",
@@ -14,6 +14,7 @@ const AddContact = () => {
     address: ""
   });
 
+  // Cargar contacto si estamos editando
   useEffect(() => {
     if (id) {
       const fetchContact = async () => {
@@ -21,16 +22,16 @@ const AddContact = () => {
         if (data) {
           setContact({
             id: data.id,
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            address: data.address
+            name: data.name || "",
+            phone: data.phone || "",
+            email: data.email || "",
+            address: data.address || ""
           });
         }
       };
       fetchContact();
     }
-  }, [id]);
+  }, [id, actions]);
 
   const handleChange = (e) => {
     setContact({
@@ -59,7 +60,7 @@ const AddContact = () => {
             type="text"
             className="form-control"
             name="name"
-            value={contact.name}
+            value={contact.name || ""}
             onChange={handleChange}
             required
           />
@@ -71,7 +72,7 @@ const AddContact = () => {
             type="tel"
             className="form-control"
             name="phone"
-            value={contact.phone}
+            value={contact.phone || ""}
             onChange={handleChange}
             required
           />
@@ -83,7 +84,7 @@ const AddContact = () => {
             type="email"
             className="form-control"
             name="email"
-            value={contact.email}
+            value={contact.email || ""}
             onChange={handleChange}
             required
           />
@@ -95,7 +96,7 @@ const AddContact = () => {
             type="text"
             className="form-control"
             name="address"
-            value={contact.address}
+            value={contact.address || ""}
             onChange={handleChange}
           />
         </div>

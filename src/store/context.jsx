@@ -5,21 +5,22 @@ export const Context = React.createContext(null);
 
 const injectContext = PassedComponent => {
     const StoreWrapper = props => {
-        const [state, setState] = useState(
-            getState({
-                getStore: () => state.store,
-                getActions: () => state.actions,
-                setStore: updatedStore =>
-                    setState({
-                        store: Object.assign(state.store, updatedStore),
-                        actions: { ...state.actions }
-                    })
-            })
-        );
-
+        const [state, setState] = useState(() => {
+            const initialState = getState({
+                getStore: () => initialState.store,
+                getActions: () => initialState.actions,
+                setStore: updatedStore => {
+                    setState(prevState => ({
+                        store: Object.assign({}, prevState.store, updatedStore),
+                        actions: { ...prevState.actions }
+                    }));
+                }
+            });
+            return initialState;
+        });
 
         useEffect(() => {
-            state.actions.getContacts(); 
+            state.actions.getContacts();
         }, []);
 
         return (
